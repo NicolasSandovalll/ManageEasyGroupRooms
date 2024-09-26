@@ -33,7 +33,47 @@ public class GestionUsuario {
         return false;
     }
 
-    private boolean existeUsuario
+    private boolean existeUsuario(String nombreUsuario) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(ARCHIVO_USUARIOS));
+        String linea;
+        while ((linea = br.readLine()) != null) {
+            String[] datos = linea.split(",");
+            if (datos[0].equals(nombreUsuario)) {
+                br.close();
+                return true;
+            }
+        }
+        br.close();
+        return false;
+
+
+
+    }
+
+    public void editarPerfil(String nombreUsuario, String nuevaContraseña) throws IOException {
+        File archivoOriginal = new File(ARCHIVO_USUARIOS);
+        File archivoTemp = new File("temp.txt");
+
+        BufferedReader br = new BufferedReader(new FileReader(archivoOriginal));
+        BufferedWriter bw = new BufferedWriter(new FileWriter(archivoTemp));
+
+        String linea;
+
+        while ((linea = br.readLine()) != null) {
+            String[] datos = linea.split(",");
+            if (datos[0].equals(nombreUsuario)) {
+                bw.write(nombreUsuario + "," + nuevaContraseña);
+            } else {
+                bw.write(linea);
+            }
+            bw.newLine();
+        }
+        br.close();
+        bw.close();
+
+        archivoOriginal.delete();
+        archivoTemp.renameTo(archivoOriginal);
+    }
 
 
 
